@@ -58,7 +58,13 @@ def checkWinner():
     if board[0][2] == board[1][1] == board[2][0] and board[2][0] != '':
         winner = board[0][2]
 
-    if len(available) == 0 and winner is None:
+    # tie
+    count = 0
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == '':
+                count += 1
+    if count == 0 and winner is None:
         return 'tie'
     else:
         return winner
@@ -72,7 +78,6 @@ scores = {'X': 1,
 def minimax(board, depth, isMaximizing):
     global scores
     result = checkWinner()
-    # print(board, depth)
     if result is not None:
         return scores[result]
     if isMaximizing:
@@ -112,7 +117,6 @@ def nextTurn():
             if board[i][j] == '':
                 board[i][j] = players[ai]
                 score = minimax(board, 1, False)
-                print(board, score)
                 board[i][j] = ''
                 if score > bestScore:
                     bestScore = score
@@ -138,7 +142,8 @@ def main():
     global currentPlayer, players
     for i in range(3):
         for j in range(3):
-            available.append([i, j])
+            if board[i][j] == '':
+                available.append([i, j])
     while True:
         clock.tick(30)
 
